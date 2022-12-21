@@ -1,4 +1,4 @@
-package genericgorm
+package grm
 
 // CreateObject ...
 func (r Repository[T]) Create(data *T) error {

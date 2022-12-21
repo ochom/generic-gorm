@@ -1,4 +1,4 @@
-package genericgorm
+package grm
 
 import (
 	"testing"
@@ -11,7 +11,7 @@ import (
 func initTestConnection(t *testing.T) *Connection {
 	// sqlite memory
 	conn := NewConnection(Sqlite, "file::memory:?cache=shared")
-	err := conn.Migrate(&User{})
+	err := conn.Migrate(AllModels...)
 	if err != nil {
 		t.Error(err)
 	}
@@ -21,7 +21,7 @@ func initTestConnection(t *testing.T) *Connection {
 
 func getUserRepository(t *testing.T) *Repository[User] {
 	conn := initTestConnection(t)
-	return NewRepository[User](conn.DB)
+	return NewRepository[User](conn)
 }
 
 func TestCreate(t *testing.T) {

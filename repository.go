@@ -1,4 +1,4 @@
-package genericgorm
+package grm
 
 import "gorm.io/gorm"
 
@@ -8,8 +8,8 @@ type Repository[T any] struct {
 }
 
 // NewRepository ...
-func NewRepository[T any](conn *gorm.DB) *Repository[T] {
+func NewRepository[T any](conn *Connection) *Repository[T] {
 	return &Repository[T]{
-		orm: conn,
+		orm: conn.DB,
 	}
 }
