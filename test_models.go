@@ -6,3 +6,8 @@ type User struct {
 	FirstName string
 	LastName  string
 }
+
+// AllModels ...
+var AllModels = []interface{}{
+	&User{},
+}
