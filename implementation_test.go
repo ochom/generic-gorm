@@ -1,4 +1,4 @@
-package genericgorm
+package grm
 
 import (
 	"testing"
