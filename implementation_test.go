@@ -21,7 +21,7 @@ func initTestConnection(t *testing.T) *Connection {
 
 func getUserRepository(t *testing.T) *Repository[User] {
 	conn := initTestConnection(t)
-	return NewRepository[User](conn.DB)
+	return NewRepository[User](conn)
 }
 
 func TestCreate(t *testing.T) {
