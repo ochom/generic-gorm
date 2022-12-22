@@ -1,97 +1,88 @@
-package grm
+package tests
 
 import (
 	"testing"
 
 	"github.com/google/uuid"
+	grm "github.com/ochom/generic-gorm"
 	"github.com/stretchr/testify/require"
 )
 
-// initTestConnection ...
-func initTestConnection(t *testing.T) *Connection {
-	// sqlite memory
-	conn := NewConnection(Sqlite, "file::memory:?cache=shared")
-	err := conn.Migrate(AllModels...)
-	if err != nil {
+func initRepo(t *testing.T) {
+	grm.Init()
+	if err := grm.Migrate(AllModels...); err != nil {
 		t.Error(err)
 	}
-
-	return conn
-}
-
-func getUserRepository(t *testing.T) *Repository[User] {
-	conn := initTestConnection(t)
-	return NewRepository[User](conn)
 }
 
 func TestCreate(t *testing.T) {
-	r := getUserRepository(t)
+	initRepo(t)
 	data := &User{
 		ID:        uuid.NewString(),
 		FirstName: "Ochom",
 	}
-	err := r.Create(data)
+	err := grm.Create(data)
 	require.NoError(t, err)
 }
 
 func TestUpdate(t *testing.T) {
-	r := getUserRepository(t)
+	initRepo(t)
 	data := User{
 		ID:        uuid.NewString(),
 		FirstName: "Ochom",
 		LastName:  "Richard",
 	}
-	err := r.Create(&data)
+	err := grm.Create(&data)
 	require.NoError(t, err)
 
-	user, err := r.GetOne(&User{ID: data.ID})
+	user, err := grm.GetOne(&User{ID: data.ID})
 	require.NoError(t, err)
 
 	user.FirstName = "Ochom Richard"
-	err = r.Update(&data)
+	err = grm.Update(&data)
 	require.NoError(t, err)
 }
 
 func TestDelete(t *testing.T) {
-	r := getUserRepository(t)
+	initRepo(t)
 	data := User{
 		ID:        uuid.NewString(),
 		FirstName: "Ochom",
 		LastName:  "Richard",
 	}
-	err := r.Create(&data)
+	err := grm.Create(&data)
 	require.NoError(t, err)
 
-	err = r.Delete(&data)
+	err = grm.Delete(&data)
 	require.NoError(t, err)
 }
 
 func TestGetOne(t *testing.T) {
-	r := getUserRepository(t)
+	initRepo(t)
 	data := User{
 		ID:        uuid.NewString(),
 		FirstName: "Ochom",
 		LastName:  "Richard",
 	}
-	err := r.Create(&data)
+	err := grm.Create(&data)
 	require.NoError(t, err)
 
-	user, err := r.GetOne(&User{ID: data.ID})
+	user, err := grm.GetOne(&User{ID: data.ID})
 	require.NoError(t, err)
 	require.Equal(t, data.ID, user.ID)
 }
 
 func TestGetMany(t *testing.T) {
-	r := getUserRepository(t)
+	initRepo(t)
 	data := User{
 		ID:        uuid.NewString(),
 		FirstName: "Ochom",
 		LastName:  "Richard",
 	}
-	err := r.Create(&data)
+	err := grm.Create(&data)
 	require.NoError(t, err)
 
-	users, err := r.GetMany(&User{})
+	users, err := grm.GetMany(&User{})
 	require.NoError(t, err)
 	require.NotEmpty(t, users)
 }
