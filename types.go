@@ -22,8 +22,8 @@ const (
 	Sqlite   Platform = "sqlite"
 )
 
-// NewConnection ...
-func NewConnection(dbType Platform, dsn string) *Connection {
+// newConnection ...
+func newConnection(dbType Platform, dsn string) *Connection {
 	var conn *gorm.DB
 	var err error
 
