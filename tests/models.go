@@ -1,4 +1,4 @@
-package grm
+package tests
 
 // User ...
 type User struct {

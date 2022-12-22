@@ -12,11 +12,6 @@ type Connection struct {
 	*gorm.DB
 }
 
-// Migrate ...
-func (c *Connection) Migrate(models ...interface{}) error {
-	return c.DB.AutoMigrate(models...)
-}
-
 // Platform ...
 type Platform string
 
@@ -31,6 +26,7 @@ const (
 func NewConnection(dbType Platform, dsn string) *Connection {
 	var conn *gorm.DB
 	var err error
+
 	switch dbType {
 	case Postgres:
 		conn, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
