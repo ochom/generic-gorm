@@ -17,18 +17,18 @@ func (c *Connection) Migrate(models ...interface{}) error {
 	return c.DB.AutoMigrate(models...)
 }
 
-// Type ...
-type Type string
+// Platform ...
+type Platform string
 
 // Types ...
 const (
-	Postgres Type = "postgres"
-	MySQL    Type = "mysql"
-	Sqlite   Type = "sqlite"
+	Postgres Platform = "postgres"
+	MySQL    Platform = "mysql"
+	Sqlite   Platform = "sqlite"
 )
 
 // NewConnection ...
-func NewConnection(dbType Type, dsn string) *Connection {
+func NewConnection(dbType Platform, dsn string) *Connection {
 	var conn *gorm.DB
 	var err error
 	switch dbType {
