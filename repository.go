@@ -1,10 +1,5 @@
 package grm
 
-// Migrate ...
-func Migrate(models ...interface{}) error {
-	return conn.DB.AutoMigrate(models...)
-}
-
 // Create ...
 func Create[T any](data *T) error {
 	return conn.Create(data).Error
