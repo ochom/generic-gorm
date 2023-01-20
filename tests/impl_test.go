@@ -11,7 +11,7 @@ import (
 func initRepo(t *testing.T) {
 	dbType := grm.Sqlite
 	dsn := "file::memory:?cache=shared"
-	grm.Init(dbType, dsn)
+	grm.Init(dbType, dsn, grm.Silent)
 	if err := grm.Migrate(AllModels...); err != nil {
 		t.Error(err)
 	}
