@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	grm "github.com/ochom/generic-gorm"
+	"github.com/ochom/grm"
 	"github.com/stretchr/testify/require"
 )
 
