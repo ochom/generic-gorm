@@ -1,1 +1,3 @@
-# generic-gorm
+# grm
+
+Additional wrapper for the gorm
