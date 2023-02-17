@@ -1,4 +1,4 @@
-module github.com/ochom/generic-gorm
+module github.com/ochom/grm
 
 go 1.19
 

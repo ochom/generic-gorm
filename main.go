@@ -21,7 +21,7 @@ func Migrate(models ...interface{}) error {
 	return conn.DB.AutoMigrate(models...)
 }
 
-// GetConnection get the connection
-func GetConnection() *gorm.DB {
+// Conn get the connection database
+func Conn() *gorm.DB {
 	return conn.DB
 }
