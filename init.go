@@ -33,7 +33,7 @@ const (
 // Connection ...
 type Connection struct {
 	SQL *gorm.DB
-	Doc *mongo.Client
+	Doc *mongo.Database
 }
 
 // newConnection ...
@@ -69,12 +69,12 @@ func (c *Connection) withSQL(platform Platform, dsn string, logLevel logger.LogL
 }
 
 // withMongo ...
-func (c *Connection) withMongo(dsn string) *Connection {
+func (c *Connection) withMongo(dsn, database string) *Connection {
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(dsn))
 	if err != nil {
 		panic(err)
 	}
 
-	c.Doc = client
+	c.Doc = client.Database(database)
 	return c
 }

@@ -23,7 +23,7 @@ func InitSQL(platform Platform, dsn string, logLevel logger.LogLevel) {
 }
 
 // InitMongo manually init this package to Mongo
-func InitMongo(dsn string) {
+func InitMongo(dsn, database string) {
 	if conn == nil {
 		conn = newConnection()
 	}
@@ -32,7 +32,7 @@ func InitMongo(dsn string) {
 		return
 	}
 
-	conn = conn.withMongo(dsn)
+	conn = conn.withMongo(dsn, database)
 }
 
 // Migrate ...
@@ -46,6 +46,6 @@ func SQL() *gorm.DB {
 }
 
 // Mongo get the connection Mongo database
-func Mongo() *mongo.Client {
+func Mongo() *mongo.Database {
 	return conn.Doc
 }
