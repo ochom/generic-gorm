@@ -1,17 +1,16 @@
 package grm
 
 import (
+	"context"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
-
-// Connection ...
-type Connection struct {
-	*gorm.DB
-}
 
 // Platform ...
 type Platform string
@@ -31,12 +30,23 @@ const (
 	Info
 )
 
+// Connection ...
+type Connection struct {
+	SQL *gorm.DB
+	Doc *mongo.Database
+}
+
 // newConnection ...
-func newConnection(dbType Platform, dsn string, logLevel logger.LogLevel) *Connection {
+func newConnection() *Connection {
+	return &Connection{}
+}
+
+// withSQL ...
+func (c *Connection) withSQL(platform Platform, dsn string, logLevel logger.LogLevel) *Connection {
 	var conn *gorm.DB
 	var err error
 
-	switch dbType {
+	switch platform {
 	case Postgres:
 		conn, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 			Logger: logger.Default.LogMode(0),
@@ -54,5 +64,17 @@ func newConnection(dbType Platform, dsn string, logLevel logger.LogLevel) *Conne
 		panic(err)
 	}
 
-	return &Connection{conn}
+	c.SQL = conn
+	return c
+}
+
+// withMongo ...
+func (c *Connection) withMongo(dsn, database string) *Connection {
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(dsn))
+	if err != nil {
+		panic(err)
+	}
+
+	c.Doc = client.Database(database)
+	return c
 }
