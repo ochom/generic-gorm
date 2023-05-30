@@ -2,7 +2,7 @@ package grm
 
 // Create ...
 func Create[T any](data *T) error {
-	return conn.Create(data).Error
+	return sql.Create(data).Error
 }
 
 // CreateMany ...
@@ -12,7 +12,7 @@ func CreateMany[T any](data []*T) error {
 
 // Update ...
 func Update[T any](data *T) error {
-	return conn.Save(data).Error
+	return sql.Save(data).Error
 }
 
 // UpdateMany ...
@@ -22,13 +22,13 @@ func UpdateMany[T any](data []*T) error {
 
 // Delete ...
 func Delete[T any](query *T) error {
-	return conn.Delete(query).Error
+	return sql.Delete(query).Error
 }
 
 // GetOne ...
 func GetOne[T any](query *T) (*T, error) {
 	var data T
-	err := conn.First(&data, query).Error
+	err := sql.First(&data, query).Error
 	if err != nil {
 		return nil, err
 	}
@@ -39,6 +39,6 @@ func GetOne[T any](query *T) (*T, error) {
 // GetMany ...
 func GetMany[T any](query *T) ([]*T, error) {
 	var data []*T
-	err := conn.Find(&data, query).Error
+	err := sql.Find(&data, query).Error
 	return data, err
 }

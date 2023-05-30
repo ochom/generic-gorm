@@ -1,6 +1,10 @@
 package grm
 
 import (
+	"context"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
@@ -10,7 +14,8 @@ import (
 
 // Connection ...
 type Connection struct {
-	*gorm.DB
+	SQL *gorm.DB
+	Doc *mongo.Client
 }
 
 // Platform ...
@@ -31,8 +36,8 @@ const (
 	Info
 )
 
-// newConnection ...
-func newConnection(dbType Platform, dsn string, logLevel logger.LogLevel) *Connection {
+// newSQLConnection ...
+func newSQLConnection(dbType Platform, dsn string, logLevel logger.LogLevel) *Connection {
 	var conn *gorm.DB
 	var err error
 
@@ -54,5 +59,15 @@ func newConnection(dbType Platform, dsn string, logLevel logger.LogLevel) *Conne
 		panic(err)
 	}
 
-	return &Connection{conn}
+	return &Connection{SQL: conn}
+}
+
+// newMongoConnection ...
+func newMongoConnection(dsn string) *Connection {
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(dsn))
+	if err != nil {
+		panic(err)
+	}
+
+	return &Connection{Doc: client}
 }
