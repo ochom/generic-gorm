@@ -75,6 +75,10 @@ func (c *Connection) withMongo(dsn, database string) *Connection {
 		panic(err)
 	}
 
+	if err := client.Ping(context.Background(), nil); err != nil {
+		panic(err)
+	}
+
 	c.Doc = client.Database(database)
 	return c
 }

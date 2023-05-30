@@ -46,6 +46,6 @@ func SQL() *gorm.DB {
 }
 
 // Mongo get the connection Mongo database
-func Mongo() *mongo.Database {
-	return conn.Doc
+func Mongo(collectionName string) *mongo.Collection {
+	return conn.Doc.Collection(collectionName)
 }
