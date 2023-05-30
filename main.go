@@ -7,40 +7,45 @@ import (
 )
 
 // this will be initialized by the init function and reused across library
-var sql *gorm.DB
-var mng *mongo.Client
+var conn *Connection
 
 // Init manually init this package to SQL
 func InitSQL(platform Platform, dsn string, logLevel logger.LogLevel) {
-	if sql != nil {
+	if conn == nil {
+		conn = newConnection()
+	}
+
+	if conn.SQL != nil {
 		return
 	}
 
-	conn := newSQLConnection(platform, dsn, logLevel)
-	sql = conn.SQL
+	conn = conn.withSQL(platform, dsn, logLevel)
 }
 
 // InitMongo manually init this package to Mongo
 func InitMongo(dsn string) {
-	if mng != nil {
+	if conn == nil {
+		conn = newConnection()
+	}
+
+	if conn.Doc != nil {
 		return
 	}
 
-	conn := newMongoConnection(dsn)
-	mng = conn.Doc
+	conn = conn.withMongo(dsn)
 }
 
 // Migrate ...
 func Migrate(models ...interface{}) error {
-	return sql.AutoMigrate(models...)
+	return conn.SQL.AutoMigrate(models...)
 }
 
 // SQL get the connection SQL database
 func SQL() *gorm.DB {
-	return sql
+	return conn.SQL
 }
 
 // Mongo get the connection Mongo database
 func Mongo() *mongo.Client {
-	return mng
+	return conn.Doc
 }

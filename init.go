@@ -12,12 +12,6 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-// Connection ...
-type Connection struct {
-	SQL *gorm.DB
-	Doc *mongo.Client
-}
-
 // Platform ...
 type Platform string
 
@@ -36,12 +30,23 @@ const (
 	Info
 )
 
-// newSQLConnection ...
-func newSQLConnection(dbType Platform, dsn string, logLevel logger.LogLevel) *Connection {
+// Connection ...
+type Connection struct {
+	SQL *gorm.DB
+	Doc *mongo.Client
+}
+
+// newConnection ...
+func newConnection() *Connection {
+	return &Connection{}
+}
+
+// withSQL ...
+func (c *Connection) withSQL(platform Platform, dsn string, logLevel logger.LogLevel) *Connection {
 	var conn *gorm.DB
 	var err error
 
-	switch dbType {
+	switch platform {
 	case Postgres:
 		conn, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 			Logger: logger.Default.LogMode(0),
@@ -59,15 +64,17 @@ func newSQLConnection(dbType Platform, dsn string, logLevel logger.LogLevel) *Co
 		panic(err)
 	}
 
-	return &Connection{SQL: conn}
+	c.SQL = conn
+	return c
 }
 
-// newMongoConnection ...
-func newMongoConnection(dsn string) *Connection {
+// withMongo ...
+func (c *Connection) withMongo(dsn string) *Connection {
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(dsn))
 	if err != nil {
 		panic(err)
 	}
 
-	return &Connection{Doc: client}
+	c.Doc = client
+	return c
 }
