@@ -7,7 +7,7 @@ func Create[T any](data *T) error {
 
 // CreateMany ...
 func CreateMany[T any](data []*T) error {
-	return conn.Create(data).Error
+	return sql.Create(data).Error
 }
 
 // Update ...
@@ -17,7 +17,7 @@ func Update[T any](data *T) error {
 
 // UpdateMany ...
 func UpdateMany[T any](data []*T) error {
-	return conn.Save(data).Error
+	return sql.Save(data).Error
 }
 
 // Delete ...
