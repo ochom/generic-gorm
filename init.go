@@ -30,19 +30,19 @@ const (
 	Info
 )
 
-// Connection ...
-type Connection struct {
-	SQL *gorm.DB
-	Doc *mongo.Database
+// database ...
+type database struct {
+	sql *gorm.DB
+	doc *mongo.Database
 }
 
 // newConnection ...
-func newConnection() *Connection {
-	return &Connection{}
+func newConnection() *database {
+	return &database{}
 }
 
 // withSQL ...
-func (c *Connection) withSQL(platform Platform, dsn string, logLevel logger.LogLevel) *Connection {
+func (c *database) withSQL(platform Platform, dsn string, logLevel logger.LogLevel) *database {
 	var conn *gorm.DB
 	var err error
 
@@ -64,12 +64,12 @@ func (c *Connection) withSQL(platform Platform, dsn string, logLevel logger.LogL
 		panic(err)
 	}
 
-	c.SQL = conn
+	c.sql = conn
 	return c
 }
 
 // withMongo ...
-func (c *Connection) withMongo(dsn, database string) *Connection {
+func (c *database) withMongo(dsn, database string) *database {
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(dsn))
 	if err != nil {
 		panic(err)
@@ -79,6 +79,6 @@ func (c *Connection) withMongo(dsn, database string) *Connection {
 		panic(err)
 	}
 
-	c.Doc = client.Database(database)
+	c.doc = client.Database(database)
 	return c
 }
