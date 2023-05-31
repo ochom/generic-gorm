@@ -7,7 +7,7 @@ import (
 )
 
 // this will be initialized by the init function and reused across library
-var conn *Connection
+var conn *database
 
 // Init manually init this package to SQL
 func InitSQL(platform Platform, dsn string, logLevel logger.LogLevel) {
@@ -15,7 +15,7 @@ func InitSQL(platform Platform, dsn string, logLevel logger.LogLevel) {
 		conn = newConnection()
 	}
 
-	if conn.SQL != nil {
+	if conn.sql != nil {
 		return
 	}
 
@@ -28,7 +28,7 @@ func InitMongo(dsn, database string) {
 		conn = newConnection()
 	}
 
-	if conn.Doc != nil {
+	if conn.doc != nil {
 		return
 	}
 
@@ -37,15 +37,26 @@ func InitMongo(dsn, database string) {
 
 // Migrate ...
 func Migrate(models ...interface{}) error {
-	return conn.SQL.AutoMigrate(models...)
+	return conn.sql.AutoMigrate(models...)
 }
 
 // SQL get the connection SQL database
 func SQL() *gorm.DB {
-	return conn.SQL
+	return conn.sql
 }
 
 // Mongo get the connection Mongo database
 func Mongo() *mongo.Database {
-	return conn.Doc
+	return conn.doc
+}
+
+// Col get the connection Mongo database takes interface to retrieve table name
+// returns the collection
+func Col(v interface{}) *mongo.Collection {
+	model, ok := v.(Model)
+	if !ok {
+		panic("object does does not have TableName method")
+	}
+
+	return conn.doc.Collection(model.TableName())
 }
